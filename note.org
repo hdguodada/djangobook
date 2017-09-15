@@ -4,3 +4,57 @@ django 是怎么处理请求的？
 一切均始于settings.py, 当运行python manage.py runserver 的时候，脚本找到mysite/settings.py, 根据ROOT_URLCONF = 'mysite.urls', 装载URLconf, 然后按顺序匹配url,当找到
 匹配项，调用相对应的views,
 *** 动态url
+- 位置参数 url(r'(\d+)^$', ) 由括号包裹起来的捕获值， 位置参数可以任意命名，但是位置必须是第二个。
+- 关键字参数 url(r'(?P<name>\d+)', ) 括号包裹起来的捕获值将赋值给name, get(request, name), get
+函数中必须带由 name 参数。
+** 模板
+*** 标签
+
+**** if/else
+{%	if	%}	 	标签检查(evaluate)一个变量,如果这个变量为真(即,变量存在,非空,不是布
+尔值假),系统会显示在	 	{%	if	%}	 	和	 	{%	endif	%}	 	之间的任何内容
+{% if %} 标签接受 and, or , not 关键字来对多个变量判断。
+- 并没有{% elif %}
+- 多次使用同一个逻辑操作符是没有问题的,但是我们不能把不同的操作符组合起来
+**** for
+- 允许我们在一个序列上迭代。与python的for语句相似。模板系统会渲染{% for %} ,{% endfor %}之间的
+所有内容
+
+- 给标签添加一个reversed使得该列表反向迭代：
+{% for athlete in athlete_list reversed %}
+...
+{% endfor %}
+- 在执行循环之前先检车列表的大小， 当列表为空时输出一些特别的提示。
+{% if y %}
+{% for x in y %}
+{% endfor %}
+{% elif %}
+特别的提示
+{% endif %}
+上面的做法比较常见。
+所以for 标签支持一个可选的{% empty %} 分句
+- forloop模板变量。 提示循环进度信息的属性。
+{{ forloop.counter }}第一次循环时，forloop.counter = 1
+{{ forloop.counter0 }} 第一次循环时，forloop.counter = 0
+{{ forloop.revcounter }} 第一次循环时，设置为序列中项的总数，最后一次为1
+{{ forloop.recounter1 }} 类似
+{{ forloop.first }} 一个布尔值， 如果第一次执行，它为True.
+{{ forloop.last }} 最后一次执行则为True
+一个常见的用法时在一系列的链接之间放置管道符.
+{% for link in links %}{{ link }}{% if not forloop.last %}|{% endfor %}
+另一种常见的用途是为列表的每个单词加上逗号。
+{% for p in places %}{{ p}}{% if not forloop.last }}, ｛% endfor %｝
+**** ifequal/ifnotequal
+- 支持{% else %}
+
+- 只有模板变量，字符串，整数和小数可以作为{% ifequal %}标签的参数。
+*** 过滤器
+模板过滤前是在变量被显示前修改它的值的一个简单方法。
+{{ name|lower }}　显示name的小写
+{{ my_list|first|upper }} 列表的第一个元素的大写
+{{ bio|truncatewords:"30" }}　显示变量bio 的前３０个词
+*** TEMPLATES
+参数说明：　
+'BACKEND' :
+'DIRS': defines a list of directories where the engine should look for the template source files, in search order.
+'APP_DIRS': tell engine should look for tempaltes insiede installed applications.
