@@ -1,0 +1,6 @@
+* djangobook 2.0
+** 视图
+django 是怎么处理请求的？
+一切均始于settings.py, 当运行python manage.py runserver 的时候，脚本找到mysite/settings.py, 根据ROOT_URLCONF = 'mysite.urls', 装载URLconf, 然后按顺序匹配url,当找到
+匹配项，调用相对应的views,
+*** 动态url
