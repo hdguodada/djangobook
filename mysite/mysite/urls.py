@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^hello/current_time/$', views.current_datetime),
     url(r'^hello/searh/$', views.searh_form),
     url(r'^book/', include('book.urls')),
+    url(r'^contact/', include('contact.urls', namespace='contact')),
 ]

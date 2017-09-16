@@ -58,3 +58,44 @@ django 是怎么处理请求的？
 'BACKEND' :
 'DIRS': defines a list of directories where the engine should look for the template source files, in search order.
 'APP_DIRS': tell engine should look for tempaltes insiede installed applications.
+** 表单
+example:
+#+BEGIN_SRC python
+  from django import forms
+
+
+  class contactForm(forms.Form):
+      subject = forms.CharField()
+      email = forms.EmailField(required=False)
+      message = forms.CharField()
+
+#+END_SRC
+－　调用任何绑定form的is_valid()方法，就可以知道它的数据是否合法。
+－　可以查看每个字段的出错消息。
+f = contactForm({'subject':'hello', 'message': ''})
+f['message'].errors
+f['subject].errors
+
+*** 改变字段显示
+widget 修改type属性
+message = forms.CharField(widget=forms.Textarea)
+*** 限制初始长度
+add max_length 参数
+*** 设置初始值
+form = ContactForm(
+    initial = {'subject': 'i love your site!'}
+)
+*** 自定义校验规则
+当我们希望message 字段有一个额外的校验，　我们增加一个clean_message() 方法到form()类
+#+BEGIN_SRC python
+  def clean_message(self):
+      message = self.cleaned_data['message']
+      num_words = len(message.split())
+      if num_words < 4:
+          raise forms.ValidationError('not enough words')
+      return message
+#+END_SRC
+django 模板系统自动寻找匹配的函数方法，该方法以clean_开始，以字段名结束。特别的，clean_message这个校验逻辑将在默认的校验逻辑执行被调用，所以我们可以无视他是否为空。
+
+*** 制定标签
+lable=   类似于model中的verbose_name
